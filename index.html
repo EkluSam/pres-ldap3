@@ -1,0 +1,223 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+	<title>ldap3</title>
+
+	<link rel="stylesheet" href="dist/reset.css">
+	<link rel="stylesheet" href="dist/reveal.css">
+	<link rel="stylesheet" href="dist/theme/black.css">
+
+	<!-- Theme used for syntax highlighted code -->
+	<link rel="stylesheet" href="plugin/highlight/monokai.css">
+</head>
+
+<body>
+	<div class="reveal">
+		<div class="slides">
+
+			<!-- Title slide -->
+			<section data-transition="fade">
+				<h2>Python ldap3</h2>
+				<p style="opacity: 0.2;">Samuel</p>
+			</section>
+
+			<!-- Who is updating ldap 3 ? -->
+			<section data-transition="slide" data-auto-animate>
+				<h3>Qui maintient ldap3 ?</h3>
+			</section>
+			<section data-transition="fade" data-auto-animate>
+				<h3 style="opacity: 0.2;">Qui maintient ldap3 ?</h3>
+				<p style="text-align: start; font-size:30px;">PyPi</p>
+				<div>
+					<img src="assets/who-2.png">
+				</div>
+			</section>
+			<section data-transition="fade" data-auto-animate>
+				<h3 style="opacity: 0.2;">Qui maintient ldap3 ?</h3>
+				<img src="assets/who.png">
+			</section>
+
+			<section data-transition="fade" data-auto-animate>
+				<h3 style="opacity: 0.2;">Qui maintient ldap3 ?</h3>
+				<div>
+					<img src="assets/who.png">
+					<img src="assets/last-update.png">		
+				</div>
+			</section>
+
+			<!-- How to install -->
+			<section id="1" data-transition="slide" data-auto-animate>
+				<h3>Installation</h3>
+			</section>
+			<section id="2"  data-transition="fade" data-auto-animate>
+				<h3 style="opacity: 0.2;">Installation</h3>
+				<blockquote>pip install ldap3</blockquote>
+			</section>
+
+			<section id="3" data-auto-animate data-transition="fade">
+				<h3 style="opacity: 0.2;">Installation</h3>
+				
+				<pre>
+					<p>requirements.txt</p>
+					<code data-lang="bash" data-line-numbers="3" data-trim>
+						Django==5.0.4
+						debugpy
+						ldap3==2.9.1
+						pandas==2.2.2
+						openpyxl==3.1.5
+						# ...
+					</code>
+				</pre>
+				<blockquote>pip install ldap3</blockquote>
+			</section>
+
+			<!-- How to use  -->
+			<section id="1" data-transition="slide" data-auto-animate>
+				<h3>Exemples d'utilisation</h3>
+			</section>
+
+			<!-- How to get info from ldap example 1 -->
+			<section data-auto-animate>
+				<h3 data-id="code-title" style="opacity: 0.2;">Exemples d'utilisation</h3>
+				<p style="text-align: start; font-size:30px;">ldap.py - e.g.</p>
+				<pre data-id="code-animation">
+					<code class="hljs python" data-trim data-line-numbers="1,4|7-10,4|12-13|17-21">
+					from ldap3 import ALL, Server, Connection
+					import logging
+
+					LDAP_SERVER_ADDRESS = "ldap.epfl.ch"
+					
+					def get_infos_from_email(mail: str):
+						ldap_server = Server(
+							LDAP_SERVER_ADDRESS,
+							use_ssl=True,
+							get_info=ALL)
+					
+						conn = Connection(ldap_server, auto_bind=True)
+						filter = f"(mail={mail})"
+						uId = None
+						ou = None
+
+						try:
+							conn.search(
+								"o=epfl,c=ch",
+								filter,
+								attributes=['uid','ou'])
+							uid = conn.entries[0]['uid'][0]
+							oud = conn.entries[0]['ou'][0]
+						except Exception:
+							logging.error(
+								f'Something went wrong!\nmail: {mail}')
+						finally:
+							conn.unbind()
+					
+						return uId, ou
+				</code></pre>
+			</section>
+
+			<!-- ldap results  -->
+			<section id="ldap-shell" data-transition="fade">
+				<h3 data-id="code-title" style="opacity: 0.2;">Exemples d'utilisation</h3>
+				<p style="text-align: start; font-size:30px;">résultat ldap - 1</p>
+				<pre><code data-lang="bash" data-line-numbers="true" data-trim>
+				# LDAP Search Output
+				dn: cn=Samuel Eklu,ou=ic-it,ou=ic-sg,ou=ic,o=epfl,c=ch
+				status: Read
+				readtime: 2024-09-20T12:36:40.997146
+				ou: IC-IT
+				description: IC - Services généraux Informatique
+				ou_en: IC - Computer Services
+				uid: eklu
+				email: eklu@ic-it
+				</code></pre>
+			</section>
+			<section id="ldap-shell" data-transition="fade">
+				<h3 data-id="code-title" style="opacity: 0.2;">Exemples d'utilisation</h3>
+				<p style="text-align: start; font-size:30px;">résultat ldap - 2</p>
+				<pre><code data-lang="bash" data-line-numbers="true" data-trim>
+				# LDAP Search Output
+				dn: cn=Samuel Eklu,ou=ic-it,ou=ic-sg,ou=ic,o=epfl,c=ch
+				status: Read
+				readtime: 2024-09-20T12:36:40.997146
+				ou: IC-IT
+				description: IC - Services généraux Informatique
+				ou_en: IC - Computer Services
+				uid: eklu
+				email: eklu@ic-it
+				</code></pre>
+			</section>
+
+			
+			<!-- get info from ldap example 1 -->
+			<section data-auto-animate>
+				<h3 data-id="code-title" style="opacity: 0.2;">Exemples d'utilisation</h3>
+				<p style="text-align: start; font-size:30px;">ldap.py - e.g.</p>
+				<pre data-id="code-animation">
+					<code class="hljs python" data-trim data-line-numbers="17-21|24-26|27-28">
+					from ldap3 import ALL, Server, Connection
+					import logging
+
+					LDAP_SERVER_ADDRESS = "ldap.epfl.ch"
+					
+					def get_infos_from_email(mail: str) -> str | None:
+						ldap_server = Server(
+							LDAP_SERVER_ADDRESS,
+							use_ssl=True,
+							get_info=ALL)
+					
+						conn = Connection(ldap_server, auto_bind=True)
+						filter = f"(mail={mail})"
+						uId = None
+						ou = None
+
+						try:
+							conn.search(
+								"o=epfl,c=ch",
+								filter,
+								attributes=['uid','ou'])
+							uid = conn.entries[0]['uid'][0]
+							oud = conn.entries[0]['ou'][0]
+						except Exception:
+							logging.error(
+								f'Something went wrong!\nmail: {mail}')
+						finally:
+							conn.unbind()
+					
+						return uId, ou
+				</code></pre>
+			</section>
+
+			<section id="logo-slide" data-auto-animate  data-background-color="rgb(0, 0, 0)">
+				
+				<h3 style="opacity: 0.2;">Samuel</h3>
+
+				<!-- Logo Image -->
+				<img src="assets/end-logo.gif" alt="Logo" style="display:block; margin:auto; width:200px; height:auto;">
+				
+				<!-- Text under logo -->
+				<p style="text-align: center; font-size:30px;">Merci de votre attention</p>
+			</section>
+
+
+			<script src="dist/reveal.js"></script>
+			<script src="plugin/notes/notes.js"></script>
+			<script src="plugin/markdown/markdown.js"></script>
+			<script src="plugin/highlight/highlight.js"></script>
+			<script>
+				// More info about initialization & config:
+				// - https://revealjs.com/initialization/
+				// - https://revealjs.com/config/
+				Reveal.initialize({
+					hash: true,
+
+					// Learn about plugins: https://revealjs.com/plugins/
+					plugins: [RevealMarkdown, RevealHighlight, RevealNotes]
+				});
+			</script>
+</body>
+
+</html>
